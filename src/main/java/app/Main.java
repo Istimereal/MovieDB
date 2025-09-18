@@ -1,15 +1,17 @@
 package app;
 
 import app.dtos.MovieIdOnlyDTO;
+import app.services.MovieService;
 
 import java.util.List;
 
-import static app.services.MovieIdFromReleasePeriod.getMovieIdByPeriodAndCountry;
+import static app.services.MovieAPIService.getMovieIdByPeriodAndCountry;
 
 public class Main {
     public static void main(String[] args) {
 
-        List<MovieIdOnlyDTO> moviesIdOnlies = getMovieIdByPeriodAndCountry("2025-08-01","2025-09-15","da");
+        MovieService movieService = new MovieService();
 
+        movieService.getGenres();
     }
 }
