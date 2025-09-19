@@ -1,23 +1,27 @@
 package app.services;
 
+import app.dtos.MovieCompleteInfoDTO;
 import app.dtos.MovieIdOnlyDTO;
 import app.dtos.GenreDTO;
 import app.dtos.MovieListIdDTO;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-import static app.services.MovieAPIService.getMovieIdByPeriodAndCountry;
+import static app.services.MovieAPIService.*;
 import static java.util.Arrays.stream;
 
 public class MovieService {
 
     List<MovieIdOnlyDTO> moviesIdOnly = getMovieIdByPeriodAndCountry("2025-08-01","2025-09-15","da");
+    List<GenreDTO> allGenres = getGenreNamesFromGenreID("da");
+    List<String> allMovieID = getMovieIds(moviesIdOnly);
+    List<MovieCompleteInfoDTO> allMoviesCompleteInfo = getAllMoviesCompleteInfo(allMovieID, "da");
+
 
     public Set<Integer> getAllMovieGenresByID(List<MovieIdOnlyDTO> movies){
-
 
     //    MovieIdOnlyDTO film = movies.get(0);
      //   Integer inte =film.getGenreIds().get(0);
@@ -35,13 +39,40 @@ public class MovieService {
                 .flatMap(List::stream)            // Stream<Integer>
                 .collect(Collectors.toCollection(LinkedHashSet::new));   // Set<Integer>, plus it helps testing by having the results in cronological order
 
-       for(Integer i: streamIdFromMovieList) {System.out.println(i);}
+  //     for(Integer i: streamIdFromMovieList) {System.out.println(i);}  // debug
         return streamIdFromMovieList;
     }
 
-    public void getGenres(){
+    public void getMovieValues(){
 
         getAllMovieGenresByID(moviesIdOnly);
+        getMovieIds(moviesIdOnly);
     }
 
+    public List<String> getMovieIds(List<MovieIdOnlyDTO> initialMovies){
+
+        List<String> movieIds = new ArrayList<>();
+
+        for(MovieIdOnlyDTO movie: initialMovies) {
+           Integer id = movie.getId();
+           String movieID = Integer.toString(id);
+      //      System.out.println("String movieId: " + movieID);
+           movieIds.add(movieID);
+        }
+        return movieIds;
+    }
+
+    public List<MovieCompleteInfoDTO> getAllMoviesCompleteInfo(List<String> movieId, String language){
+
+        List<MovieCompleteInfoDTO> allMovies = new ArrayList<>();
+        MovieCompleteInfoDTO movieCompleteInfoDTO = null;
+
+        for(String id : movieId){
+
+            movieCompleteInfoDTO = getMovieCompleteInfo(id, language);
+
+            allMovies.add(movieCompleteInfoDTO);
+        }
+        return allMovies;
+    }
 }

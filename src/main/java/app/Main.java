@@ -12,6 +12,6 @@ public class Main {
 
         MovieService movieService = new MovieService();
 
-        movieService.getGenres();
+        movieService.getMovieValues();
     }
 }
