@@ -1,6 +1,5 @@
 package app.config;
 
-import app.entities.Point;
 import app.utils.Utils;
 
 import jakarta.persistence.EntityManagerFactory;
