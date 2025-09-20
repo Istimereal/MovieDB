@@ -20,6 +20,11 @@ public class MovieService {
     List<String> allMovieID = getMovieIds(moviesIdOnly);
     List<MovieCompleteInfoDTO> allMoviesCompleteInfo = getAllMoviesCompleteInfo(allMovieID, "da");
 
+    public void getMovieValues(){
+
+        getAllMovieGenresByID(moviesIdOnly);
+        getMovieIds(moviesIdOnly);
+    }
 
     public Set<Integer> getAllMovieGenresByID(List<MovieIdOnlyDTO> movies){
 
@@ -41,12 +46,6 @@ public class MovieService {
 
   //     for(Integer i: streamIdFromMovieList) {System.out.println(i);}  // debug
         return streamIdFromMovieList;
-    }
-
-    public void getMovieValues(){
-
-        getAllMovieGenresByID(moviesIdOnly);
-        getMovieIds(moviesIdOnly);
     }
 
     public List<String> getMovieIds(List<MovieIdOnlyDTO> initialMovies){

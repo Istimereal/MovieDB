@@ -41,7 +41,6 @@ String uri = "https://api.themoviedb.org/3/discover/movie?" + apiKey + "&include
      HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
      if(response.statusCode() == 200){
-
          Object jSon = response.body();
 
       //   System.out.println(jSon.toString());  debug/test
@@ -115,7 +114,7 @@ return movieIDWrapper.getMovieIdDTOList();
         String uri = "https://api.themoviedb.org/3/movie/" + id +"?" + apiKey +
                 "&language=" + language + "&append_to_response=credits";
 
-        System.out.println("completeMovieURI: " + uri);
+     //   System.out.println("completeMovieURI: " + uri);
 
         ObjectMapper objectMapper = new ObjectMapper();
         HttpClient client = HttpClient.newHttpClient();
@@ -132,11 +131,11 @@ return movieIDWrapper.getMovieIdDTOList();
 
                 Object jSon = response.body();
 
-                   System.out.println("movieAll json: " + jSon.toString()); // debug/test
+             //      System.out.println("movieAll json: " + jSon.toString()); // debug/test
 
                 movieAll = objectMapper.readValue(jSon.toString(), MovieCompleteInfoDTO.class);
 
-                System.out.println("MovieAll: " + movieAll);
+              //  System.out.println("MovieAll: " + movieAll);
             }
             else{
                 System.out.println("Fejl ved hentning af komplet film");
