@@ -1,10 +1,18 @@
 package app.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class Genre {
 
     @Id
@@ -13,4 +21,22 @@ public class Genre {
 
     @Column(nullable = false)
     String name;
+
+    // m:m relationer
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private Set<Movie> movies = new HashSet<>();
+
+    // Uni-directonal add
+    public void addMovie(Movie movie){
+        movies.add(movie);
+    }
+
+
+ /*   // Bi-directional udpate
+    public void addMovie(Movie movie) {
+        this.movies.add(movie);
+        if(movies != null){
+            movie.setGenre(this);
+        }
+    }   */
 }
