@@ -22,7 +22,7 @@ private int id;
 private String title;
     @Column(nullable = false)
 private String releaseDate;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2500)
 private String description;
     @Column(nullable = false)
     private double populatity;
