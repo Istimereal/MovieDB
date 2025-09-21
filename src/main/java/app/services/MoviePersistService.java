@@ -21,11 +21,12 @@ import static app.services.MovieAPIService.getMovieIdByPeriodAndCountry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MoviePersistService {
 
     List<MovieIdOnlyDTO> moviesIdOnly = getMovieIdByPeriodAndCountry("2025-08-01", "2025-09-15", "da");
-    List<GenreDTO> allGenres = getGenreNamesFromGenreID("da");
+    List<GenreDTO> allDTOGenres = getGenreNamesFromGenreID("da");
     List<String> allMovieID = MovieService.getMovieIds(moviesIdOnly);
     List<MovieCompleteInfoDTO> allMoviesCompleteInfo = MovieService.getAllMoviesCompleteInfo(allMovieID, "da");
 
@@ -35,15 +36,22 @@ public class MoviePersistService {
 
         MovieService.getAllMovieGenresByID(moviesIdOnly);
         MovieService.getMovieIds(moviesIdOnly);
-        createActor(allMoviesCompleteInfo.get(0));
-        persistGenresToDB(allGenres);
+     //   createActor(allMoviesCompleteInfo.get(0));   Just a test
+        System.out.println("Ready to persist entities to DB \n");
+        persistGenresToDB(allDTOGenres);
+        System.out.println("Genres persisted \n");
         persistMoviesToDB();
+        System.out.println("Movies persisted \n");
         persistActorsToDB();
+        System.out.println("Actors persisted \n");
+        persistDirestorsToDB();
+        System.out.println("Directors persisted \n");
     }
 
     public void persistMoviesToDB(){
 
-        List<MovieDAO> movies = new ArrayList<>();
+     //   List<MovieDAO> movies = new ArrayList<>();
+        List<Movie> allMovies = new ArrayList<>();
         MovieDAO movieDAO = new MovieDAO(emf);
 
 try(EntityManager em = emf.createEntityManager()) {
@@ -51,34 +59,39 @@ try(EntityManager em = emf.createEntityManager()) {
 
         Movie m = createMovie(mDTO);
 
-        movieDAO.create(m);
-        movies.add(movieDAO);
+        allMovies.add(m);
+
+    //    movieDAO.create(m);
+    //    movies.add(movieDAO);
     }
 em.getTransaction().begin();
-   // em.persist(movies);    Kan den bruges i stedet, oghvordor er forEach bedre
-    movies.forEach(em::persist);
+   // em.persist(movies);    Kan den bruges i stedet, og hvorfor er forEach bedre
+    allMovies.forEach(em::persist);
     em.getTransaction().commit();
 }
     }
 
     public void persistActorsToDB(){
 
-        List<ActorDAO> allActors = new ArrayList<>();
-        List<Actor> actors;
+     //   List<ActorDAO> allActors = new ArrayList<>();
+        List<Actor> allActors = new ArrayList<>();
 
         ActorDAO actorDAO = new ActorDAO(emf);
 
         try(EntityManager em = emf.createEntityManager()) {
             for (int i = 0; i < allMoviesCompleteInfo.size(); i++) {
 
-                actors = createActor(allMoviesCompleteInfo.get(i));
+            List<Actor> actorOneMovies = createActor(allMoviesCompleteInfo.get(i));
+                for(Actor actor : actorOneMovies){
 
-                for (Actor a : actors) {
-
-                    actorDAO.create(a);
-
-                    allActors.add(actorDAO);
+                    allActors.add(actor);
                 }
+
+           /*     for (Actor a : actors) {
+
+                   actorDAO.create(a);
+                     allActors.add(actorDAO);
+                } */
             }
             em.getTransaction().begin();
             allActors.forEach(em::persist);
@@ -88,18 +101,24 @@ em.getTransaction().begin();
 
     public void persistDirestorsToDB(){
 
-        List<DirectorDAO> allDirectors = new ArrayList<>();
+      //  List<DirectorDAO> allDirectors = new ArrayList<>();
+        List<Director> allDirectors = new ArrayList<>();
 
-        DirectorDAO directorDAO = new DirectorDAO(emf);
+      //  DirectorDAO directorDAO = new DirectorDAO(emf);
 
         try(EntityManager em = emf.createEntityManager()){
 
             for (int i = 0; i < allMoviesCompleteInfo.size(); i++) {
 
-               Director director = createDirector(allMoviesCompleteInfo.get(i));
+                Director director = createDirector(allMoviesCompleteInfo.get(i));
 
-               directorDAO.create(director);
-               allDirectors.add(directorDAO);
+                if (director != null) {
+                    System.out.println("Director NR: " + i + " toString: " + director.toString());
+
+                    allDirectors.add(director);
+                    //   directorDAO.create(director);
+                    //  allDirectors.add(directorDAO);
+                }
             }
 
             em.getTransaction().begin();
@@ -108,29 +127,27 @@ em.getTransaction().begin();
         }
     }
 
-    public void persistGenresToDB(List<GenreDTO> genresDTOs){
-        List<GenreDAO> allGenres = new ArrayList<>();
+    public void persistGenresToDB(List<GenreDTO> genreDTOList) {
 
+        List<Genre> genres = new ArrayList<>();
 
-        GenreDAO genreDAO = new GenreDAO(emf);
+        try (EntityManager em = emf.createEntityManager()) {
 
-        try(EntityManager em = emf.createEntityManager()) {
-            for (GenreDTO g : genresDTOs) {
-
+            for (GenreDTO genreDTO : genreDTOList) {
+                int id = genreDTO.getIdTMDB();
+                String genreName = genreDTO.getName();
                 Genre genre = Genre.builder()
-                    .id(g.getId())
-                        .name(g.getName())
+                        .name(genreName)
+                        .IdTMDB(id)
                         .build();
+                genres.add(genre);
 
-                allGenres.add(genreDAO);
+                em.getTransaction().begin();
+                genres.forEach(em::persist);
+                em.getTransaction().commit();
             }
-            em.getTransaction().begin();
-            allGenres.forEach(em::persist);
-            em.getTransaction().commit();
         }
-
     }
-
 
     public Movie createMovie(MovieCompleteInfoDTO movieCompleteInfoDTO) {
 
@@ -153,9 +170,7 @@ em.getTransaction().begin();
 
     public List<Actor> createActor(MovieCompleteInfoDTO movieCompleteInfoDTO) {
 
-
         List<Actor> actors = new ArrayList<>();
-
         List<MovieCompleteInfoDTO.Cast> cast = movieCompleteInfoDTO.getCredits().getCast();
 
         for (int i = 0; i < cast.size(); i++) {
@@ -173,19 +188,23 @@ em.getTransaction().begin();
 
     public Director createDirector(MovieCompleteInfoDTO movieCompleteInfoDTO) {
        List<MovieCompleteInfoDTO.Crew> crew = movieCompleteInfoDTO.getCredits().getCrew();
+        System.out.println("Længde liste med crew: " + crew.size());
+
 
         Director director = null;
-       for (int i = 0; i < crew.size(); i++) {
+        if(crew != null) {
+            for (int i = 0; i < crew.size(); i++) {
+                System.out.println("Crew nummer: " + i + " Crew getJob: " + crew.get(i).getJob());
+                if (crew.get(i).getJob().toLowerCase(Locale.ROOT).contains("director")) {
 
-           if(crew.get(i).getJob().equals("director")){
+                    String name = crew.get(i).getName();
 
-               String name = crew.get(i).getName();
-
-               director = Director.builder()
-                       .name(name)
-                       .build();
-           }
-       }
+                    director = Director.builder()
+                            .name(name)
+                            .build();
+                }
+            }
+        }
        return director;
     }
 
@@ -194,13 +213,15 @@ em.getTransaction().begin();
         List<Genre> genres = new ArrayList<>();
 
         for(GenreDTO genreDTO : genreDTOList){
-            int id = genreDTO.getId();
+            int id = genreDTO.getIdTMDB();
             String genreName = genreDTO.getName();
             Genre genre = Genre.builder()
                     .id(id)
                     .name(genreName)
                     .build();
           genres.add(genre);
+
+            System.out.println("GenreName: " + genre.getName() + " GenreID: " + genre.getId());
         }
         return genres;
     }

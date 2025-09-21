@@ -22,6 +22,10 @@ public class Genre {
     @Column(nullable = false)
     String name;
 
+    @Column(nullable = false)
+    private int IdTMDB;
+
+
     // m:m relationer
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Movie> movies = new HashSet<>();
