@@ -15,6 +15,8 @@ import java.util.Set;
 @Builder
 @ToString
 public class Movie {
+
+    // CascadeType.PERSIST
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int id;

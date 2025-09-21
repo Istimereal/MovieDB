@@ -2,6 +2,7 @@ package app.daos;
 
 import app.entities.Actor;
 
+import app.entities.Director;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
@@ -24,6 +25,17 @@ public class ActorDAO implements IDAO<Actor, Integer> {
             em.getTransaction().commit();
         }
         return null;
+    }
+
+    @Override
+    public List<Actor> createAll(List<Actor> actors){
+
+        try(EntityManager em = emf.createEntityManager()){
+            em.getTransaction().begin();
+            actors.forEach(em::persist);
+            em.getTransaction().commit();
+            return null;
+        }
     }
 
     public List<Actor> getAll() {

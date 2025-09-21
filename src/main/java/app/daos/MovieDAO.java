@@ -26,6 +26,17 @@ import java.util.List;
         }
 
         @Override
+        public List<Movie> createAll(List<Movie> movies){
+
+            try(EntityManager em = emf.createEntityManager()){
+                em.getTransaction().begin();
+                movies.forEach(em::persist);
+                em.getTransaction().commit();
+                return movies;
+            }
+        }
+
+        @Override
         public List<Movie> getAll(){
 
             try( EntityManager em = emf.createEntityManager()){

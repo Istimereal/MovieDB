@@ -6,6 +6,8 @@ public interface IDAO<T, I> {
 
     T create(T t);
 
+    List<T> createAll(List<T> ts);
+
     List<T> getAll();
 
     T getById(I id);
