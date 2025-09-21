@@ -1,6 +1,7 @@
 package app.daos;
 import app.entities.Genre;
 
+import app.entities.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
@@ -23,6 +24,17 @@ public class GenreDAO implements IDAO<Genre, Integer> {
             em.getTransaction().commit();
         }
         return null;
+    }
+
+    @Override
+    public List<Genre> createAll(List<Genre> genres){
+
+        try(EntityManager em = emf.createEntityManager()){
+            em.getTransaction().begin();
+            genres.forEach(em::persist);
+            em.getTransaction().commit();
+            return null;
+        }
     }
 
     public List<Genre> getAll() {

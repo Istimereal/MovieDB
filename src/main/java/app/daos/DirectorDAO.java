@@ -2,6 +2,7 @@ package app.daos;
 
 import app.entities.Director;
 
+import app.entities.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
@@ -24,6 +25,17 @@ public class DirectorDAO implements IDAO<Director, Integer> {
             em.getTransaction().commit();
         }
         return null;
+    }
+
+    @Override
+    public List<Director> createAll(List<Director> directors){
+
+        try(EntityManager em = emf.createEntityManager()){
+            em.getTransaction().begin();
+            directors.forEach(em::persist);
+            em.getTransaction().commit();
+            return null;
+        }
     }
 
     public List<Director> getAll() {
