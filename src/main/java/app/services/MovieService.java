@@ -15,18 +15,7 @@ import static java.util.Arrays.stream;
 
 public class MovieService {
 
-    List<MovieIdOnlyDTO> moviesIdOnly = getMovieIdByPeriodAndCountry("2025-08-01","2025-09-15","da");
-    List<GenreDTO> allGenres = getGenreNamesFromGenreID("da");
-    List<String> allMovieID = getMovieIds(moviesIdOnly);
-    List<MovieCompleteInfoDTO> allMoviesCompleteInfo = getAllMoviesCompleteInfo(allMovieID, "da");
-
-    public void getMovieValues(){
-
-        getAllMovieGenresByID(moviesIdOnly);
-        getMovieIds(moviesIdOnly);
-    }
-
-    public Set<Integer> getAllMovieGenresByID(List<MovieIdOnlyDTO> movies){
+    public static Set<Integer> getAllMovieGenresByID(List<MovieIdOnlyDTO> movies){
 
     //    MovieIdOnlyDTO film = movies.get(0);
      //   Integer inte =film.getGenreIds().get(0);
@@ -48,7 +37,7 @@ public class MovieService {
         return streamIdFromMovieList;
     }
 
-    public List<String> getMovieIds(List<MovieIdOnlyDTO> initialMovies){
+    public static List<String> getMovieIds(List<MovieIdOnlyDTO> initialMovies){
 
         List<String> movieIds = new ArrayList<>();
 
@@ -61,7 +50,7 @@ public class MovieService {
         return movieIds;
     }
 
-    public List<MovieCompleteInfoDTO> getAllMoviesCompleteInfo(List<String> movieId, String language){
+    public static List<MovieCompleteInfoDTO> getAllMoviesCompleteInfo(List<String> movieId, String language){
 
         List<MovieCompleteInfoDTO> allMovies = new ArrayList<>();
         MovieCompleteInfoDTO movieCompleteInfoDTO = null;

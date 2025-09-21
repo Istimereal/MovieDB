@@ -36,7 +36,6 @@ import java.util.List;
             }
         }
 
-
         public Movie getById(Integer id){
 
             try(EntityManager em = emf.createEntityManager()){

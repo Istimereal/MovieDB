@@ -1,5 +1,6 @@
 package app.dtos;
 
+import app.entities.Actor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -113,6 +114,8 @@ public class MovieCompleteInfoDTO {
 
     @Data
     public static class Cast {
+
+     //  List<ActorAll>
         private boolean adult;
         private int gender;
         private int id;

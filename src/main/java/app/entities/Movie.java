@@ -25,7 +25,7 @@ private String releaseDate;
     @Column(nullable = false)
 private String description;
     @Column(nullable = false)
-    private Integer populatity;
+    private double populatity;
 
  /*   @ManyToMany
     @ToString.Exclude

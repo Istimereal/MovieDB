@@ -8,13 +8,12 @@ import app.dtos.MovieCompleteInfoDTO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Set;
+
 
 public class MovieAPIService {
 // https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&release_date.gte=2025-08-01&release_date.lte=2025-09-15&sort_by=popularity.desc&with_original_language=da
@@ -135,7 +134,7 @@ return movieIDWrapper.getMovieIdDTOList();
 
                 movieAll = objectMapper.readValue(jSon.toString(), MovieCompleteInfoDTO.class);
 
-              //  System.out.println("MovieAll: " + movieAll);
+             //   System.out.println("MovieAll: " + movieAll);
             }
             else{
                 System.out.println("Fejl ved hentning af komplet film");
