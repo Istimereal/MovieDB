@@ -1,7 +1,7 @@
 package app;
 
 import app.dtos.MovieIdOnlyDTO;
-import app.services.MovieService;
+import app.services.MoviePersistService;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import static app.services.MovieAPIService.getMovieIdByPeriodAndCountry;
 public class Main {
     public static void main(String[] args) {
 
-        MovieService movieService = new MovieService();
+        MoviePersistService movieService = new MoviePersistService();
 
-        movieService.getMovieValues();
+        movieService.persistEntitiesToDB();
     }
 }
